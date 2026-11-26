@@ -1,0 +1,3 @@
+- insert:
+    - id: vulcan-skills
+      name: '@openvulcan/vulcan-skills'

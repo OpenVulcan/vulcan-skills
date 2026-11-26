@@ -4,21 +4,26 @@
 
 VulcanSkills is a language-independent skill package project for Vulcan Code and [DeepSeek Harness (DSH)](https://github.com/deepseek-ai/deepseek-harness). A skill package can provide instructions for an agent, callable tools, or both. Tool entry points are declared individually, so one package can mix languages.
 
-## Integration targets
+## Try the first version
 
-1. **Vulcan Code built on a DSH fork** is the primary integration target. VulcanSkills will use the bundled host's tool registry, approval flow, cancellation, and result display.
-2. **[dsh-vulcancode](https://github.com/OpenVulcan/dsh-vulcancode)** is the integration target for users of upstream DSH. It is intended to load the same skill packages through its plugin suite.
+From the checkout, with Node.js 24 or later:
 
-## Skill packages
+```sh
+npm ci
+node src/cli.js install ./examples/echo
+node src/cli.js list
+node src/cli.js show openvulcan.echo
+node src/cli.js run openvulcan.echo node_echo --args '{"text":"hello"}'
+node src/cli.js run openvulcan.echo python_echo --args '{"text":"hello"}'
+```
 
-- `SKILL.md` explains when and how to use a skill. An instruction-only skill can consist of this file alone.
-- **TypeScript on Node.js** is the first target for tool entry points and orchestration. **Python** covers tasks such as document processing, PDF parsing, and OCR.
-- **Lua** is an optional runtime target for packages that declare Lua entry points.
-- Each host integration will use the same package format and register executable tools through the host's normal execution and approval flow.
+The CLI installs, upgrades, inspects, enables, disables, and uninstalls skills, and changes each tool's invocation mode. Install from a prepared directory, an npm `.tgz`, or a configured npm registry. The first call prepares the shared interpreter and the skill's locked dependencies.
 
-## Status
+## DSH integration
 
-This repository currently documents the project direction and planned host integrations. The package specification and runtime are in early design.
+The bundled DSH plugin can be loaded by a compatible DSH-based Vulcan Code host or installed alongside [dsh-vulcancode](https://github.com/OpenVulcan/dsh-vulcancode). Explicit tools appear individually in the host tool list. Implicit actions are documented in skill guides and routed through `vulcan_skills_call`. Both modes go through DSH's tool policies.
+
+See the [usage and integration guide in Chinese](docs/usage.md), the [package protocol](docs/package-protocol.md), and the [manifest schema](schemas/1.0.0/vulcan-skill.schema.json). The first version implements Node.js and Python.
 
 ## License
 

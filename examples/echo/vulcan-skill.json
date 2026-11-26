@@ -1,0 +1,22 @@
+{
+  "id": "openvulcan.echo",
+  "version": "0.1.0",
+  "protocol": ">=1.0.0 <2.0.0",
+  "name": "Echo",
+  "description": "Return text using Node.js or Python.",
+  "guide": "SKILL.md",
+  "runtimes": {
+    "node": { "dependencies": "none" },
+    "python": { "dependencies": "none" }
+  },
+  "tools": [
+    {
+      "id": "node_echo", "description": "Echo text using Node.js.", "runtime": "node",
+      "entry": "node/dist/echo.mjs", "export": "echo", "invocation": "explicit", "inputSchema": "schemas/echo.json"
+    },
+    {
+      "id": "python_echo", "description": "Echo text using Python.", "runtime": "python",
+      "entry": "python/echo.py", "export": "echo", "invocation": "implicit", "inputSchema": "schemas/echo.json"
+    }
+  ]
+}

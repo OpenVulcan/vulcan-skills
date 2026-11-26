@@ -1,0 +1,294 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/OpenVulcan/vulcan-skills/main/schemas/1.0.0/vulcan-skill.schema.json",
+  "title": "VulcanSkills package manifest 1.0.0 draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "version",
+    "protocol",
+    "name",
+    "description"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?:\\.[a-z][a-z0-9]*(?:-[a-z0-9]+)*)+(?![\\s\\S])"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?![\\s\\S])"
+    },
+    "protocol": {
+      "type": "string",
+      "pattern": "^>=(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*) <(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?: \\|\\| >=(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*) <(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*))*(?![\\s\\S])"
+    },
+    "name": {
+      "$ref": "#/$defs/label"
+    },
+    "description": {
+      "$ref": "#/$defs/label"
+    },
+    "guide": {
+      "const": "SKILL.md"
+    },
+    "runtimes": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "node": {
+          "$ref": "#/$defs/runtime"
+        },
+        "python": {
+          "$ref": "#/$defs/runtime"
+        }
+      }
+    },
+    "tools": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/tool"
+      }
+    }
+  },
+  "anyOf": [
+    {
+      "required": [
+        "guide"
+      ],
+      "properties": {
+        "guide": true
+      }
+    },
+    {
+      "required": [
+        "tools"
+      ],
+      "properties": {
+        "tools": true
+      }
+    }
+  ],
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "tools"
+        ],
+        "properties": {
+          "tools": {
+            "contains": {
+              "required": [
+                "invocation"
+              ],
+              "properties": {
+                "invocation": {
+                  "const": "implicit"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "guide"
+        ],
+        "properties": {
+          "guide": true
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "tools"
+        ],
+        "properties": {
+          "tools": {
+            "contains": {
+              "required": [
+                "runtime"
+              ],
+              "properties": {
+                "runtime": {
+                  "const": "node"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "runtimes"
+        ],
+        "properties": {
+          "runtimes": {
+            "required": [
+              "node"
+            ],
+            "type": "object",
+            "properties": {
+              "node": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "tools"
+        ],
+        "properties": {
+          "tools": {
+            "contains": {
+              "required": [
+                "runtime"
+              ],
+              "properties": {
+                "runtime": {
+                  "const": "python"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "runtimes"
+        ],
+        "properties": {
+          "runtimes": {
+            "required": [
+              "python"
+            ],
+            "type": "object",
+            "properties": {
+              "python": true
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "label": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "schemaPath": {
+      "type": "string",
+      "pattern": "^schemas/(?:(?!\\.{1,2}(?:/|$))[A-Za-z0-9_.-]+/)*[A-Za-z0-9_.-]+\\.json(?![\\s\\S])"
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dependencies"
+      ],
+      "properties": {
+        "dependencies": {
+          "enum": [
+            "none",
+            "locked"
+          ]
+        }
+      }
+    },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "description",
+        "runtime",
+        "entry",
+        "export",
+        "invocation",
+        "inputSchema"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*(?![\\s\\S])"
+        },
+        "description": {
+          "$ref": "#/$defs/label"
+        },
+        "runtime": {
+          "enum": [
+            "node",
+            "python"
+          ]
+        },
+        "entry": {
+          "type": "string"
+        },
+        "export": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*(?![\\s\\S])"
+        },
+        "invocation": {
+          "enum": [
+            "explicit",
+            "implicit"
+          ]
+        },
+        "inputSchema": {
+          "$ref": "#/$defs/schemaPath"
+        },
+        "outputSchema": {
+          "$ref": "#/$defs/schemaPath"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "runtime": {
+                "const": "node"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "entry": {
+                "pattern": "^node/dist/(?:(?!\\.{1,2}(?:/|$))[A-Za-z0-9_.-]+/)*[A-Za-z0-9_.-]+\\.mjs(?![\\s\\S])",
+                "type": "string"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "runtime": {
+                "const": "python"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "entry": {
+                "pattern": "^python/(?:(?!\\.{1,2}(?:/|$))[A-Za-z0-9_.-]+/)*[A-Za-z0-9_.-]+\\.py(?![\\s\\S])",
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

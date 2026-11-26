@@ -1,0 +1,24 @@
+{
+  "name": "@openvulcan/vulcan-skills",
+  "version": "0.1.0",
+  "description": "Install and run VulcanSkills packages on DeepSeek Harness",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=24", "dsh": ">=0.2.2-rc.3 <0.3.0 || >=0.2.3-alpha.2 <0.3.0" },
+  "bin": { "vulcan-skills": "./src/cli.js" },
+  "exports": { ".": "./src/dsh.js", "./store": "./src/store.js" },
+  "files": ["src", "schemas", "docs", "examples", "cordis.patch.yml", "README.zh-CN.md"],
+  "dsh": { "bundle": { "patch": "./cordis.patch.yml" } },
+  "keywords": ["dsh-plugin", "vulcan-skills"],
+  "scripts": { "test": "node --test" },
+  "dependencies": {
+    "@deepseek-ai/dsh-tools": "0.2.2-rc.3",
+    "ajv": "^8.20.0",
+    "fflate": "^0.8.2",
+    "proper-lockfile": "^4.1.2",
+    "semver": "^7.7.4",
+    "smol-toml": "^1.6.0",
+    "tar": "^7.5.16",
+    "yaml": "^2.8.3"
+  }
+}
